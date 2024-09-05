@@ -1,6 +1,9 @@
 # dl-task-contrast-prediction
  Code for the work entitled "Predicting Task Activation Maps from Resting-State Functional Connectivity using Deep Learning" by Madsen et al.
 
+## Referenced Work
+Soren J. Madsen, Lucina Q. Uddin, Jeannette A. Mumford, Deanna M. Barch, Damien A. Fair, Ian H. Gotlib, Russell A. Poldrack, Amy Kuceyeski, Manish Saggar. *Predicting Task Activation Maps from Resting-State Functional Connectivity using Deep Learning*
+
 ## Overview
 
 This project contains the source code for several models to be used in predicting task activation maps from resting-state fMRI data. BrainSurfCNN is a surface-based convolutional neural network adapted from the UGSCNN model [github](https://github.com/maxjiang93/ugscnn). BrainSERF makes incremental changes to this model to include Squeeze-Excitation attention and modified activation functions. BrainSurfGCN uses a graph convolution approach instead of surface-based convolution.
