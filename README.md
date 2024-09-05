@@ -6,7 +6,7 @@ Soren J. Madsen, Lucina Q. Uddin, Jeannette A. Mumford, Deanna M. Barch, Damien 
 
 ## Overview
 
-This project contains the source code for several models to be used in predicting task activation maps from resting-state fMRI data. BrainSurfCNN is a surface-based convolutional neural network implemented in Ngo et al., 2022 (https://github.com/ngohgia/brain-surf-cnn). BrainSERF makes incremental changes to this model to include Squeeze-Excitation attention and modified activation functions. BrainSurfGCN uses a graph convolution approach instead of surface-based convolution.
+This project contains the source code for several models to be used in predicting task activation maps from resting-state fMRI data. BrainSurfCNN is a surface-based convolutional neural network implemented by [Ngo et al., 2022](https://github.com/ngohgia/brain-surf-cnn) and published in [NeuroImage](https://www.sciencedirect.com/science/article/pii/S1053811921011204). BrainSERF makes incremental changes to this model to include Squeeze-Excitation attention and modified activation functions. BrainSurfGCN uses a graph convolution approach instead of surface-based convolution.
 
 Note: Much of the work in this code has been adapted from [BrainSurfCNN](https://github.com/ngohgia/brain-surf-cnn) which is adapted from the [UGSCNN](https://github.com/maxjiang93/ugscnn).
 
