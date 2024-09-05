@@ -62,6 +62,7 @@ python3 -u train_gnn.py \
        --n_channels_per_hemi $NUM_ICS
 ```
 Note: BrainSurfGCN's `--mesh_dir` argument requires a path to the `icosphere_2.pkl` file whereas BrainSurfCNN and BrainSERF require the entire directory of `fs_LR_mesh_templates/` for the model parameters.
+----
 
 ## Having Issues?
 
