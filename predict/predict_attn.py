@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.nn.parameter import Parameter
 
-from model.brain_surf_cnn import BrainSurfCNN, BrainSErfCNN, BrainSurfAttnCNN
+from model.brain_surf_cnn import BrainSurfCNN, BrainSErfCNN
 from utils.parser import test_args
 from utils.dataset import MultipleSampleMeshDataset
 from utils.utilities import CONTRASTS, save_checkpoint
