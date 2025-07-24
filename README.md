@@ -65,7 +65,7 @@ Note: BrainSurfGCN's `--mesh_dir` argument requires a path to the `icosphere_2.p
 ----
 
 ## Training Parameters
-Check [utils/parser.py] (https://github.com/braindynamicslab/dl-task-contrast-prediction/blob/7d5f94926999cdd9eadac93f139a7eec216b3260/utils/parser.py)
+Check [utils/parser.py](https://github.com/braindynamicslab/dl-task-contrast-prediction/utils/parser.py)
 
 ## Having Issues?
 
