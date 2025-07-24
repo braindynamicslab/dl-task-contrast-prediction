@@ -30,7 +30,7 @@ Note: Much of the work in this code has been adapted from [BrainSurfCNN](https:/
 
 5. Run data preprocessing with the scripts under `preprocess` folder.
 
-6. Run training and prediction with the scripts under the `train` and `predict` folders. Note: each script is designed to work with one type of model rather than that being an input argument.
+6. Run training and prediction with the scripts under the `train` and `predict` folders. Note: Each script is designed to work with one type of model rather than being an input argument.
 
 Example Usage:
 ```
