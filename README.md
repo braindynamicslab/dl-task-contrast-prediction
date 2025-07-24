@@ -22,11 +22,11 @@ Note: Much of the work in this code has been adapted from [BrainSurfCNN](https:/
 
 1. Set up your environment with the packages in `requirements.txt` in Python 3.9:
 
-2. Download HCP Workbench [https://www.humanconnectome.org/software/get-connectome-workbench](https://www.humanconnectome.org/software/get-connectome-workbench) for data preprocessing.
+2. Download [HCP Workbench](https://www.humanconnectome.org/software/get-connectome-workbench) for data preprocessing.
 
-3. Download HCP S1200 and HCP Retest dataset [https://db.humanconnectome.org/](https://db.humanconnectome.org), which are used in our experiments.
+3. Download HCP S1200 and [HCP Retest dataset](https://db.humanconnectome.org), which are used in our experiments.
 
-4. HCP1200 Parcellation+Timeseries+Netmats (PTN) [https://db.humanconnectome.org/data/projects/HCP_1200](https://db.humanconnectome.org/data/projects/HCP_1200) data are also needed for computing the resting-state fingerprints.
+4. [HCP1200 Parcellation+Timeseries+Netmats(PTN)](https://db.humanconnectome.org/data/projects/HCP_1200) data are also needed for computing the resting-state fingerprints.
 
 5. Run data preprocessing with the scripts under `preprocess` folder.
 
@@ -60,7 +60,7 @@ python3 -u train_gnn.py \
        --n_val_subj $NUM_VAL_SUBJ \
        --n_channels_per_hemi $NUM_ICS
 ```
-Note: BrainSurfGCN's `--mesh_dir` argument requires a path to the `icosphere_2.pkl` file whereas BrainSurfCNN and BrainSERF require the entire directory of `fs_LR_mesh_templates/` for the model parameters.
+Note: BrainSurfGCN's `--mesh_dir` argument requires a path to the `icosphere_2.pkl` file, whereas BrainSurfCNN and BrainSERF require the entire directory of `fs_LR_mesh_templates/` for the model parameters.
 
 ----
 
