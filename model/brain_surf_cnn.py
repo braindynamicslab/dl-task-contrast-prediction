@@ -17,33 +17,7 @@ from torch.nn.parameter import Parameter
 import torch_geometric
 import math
 
-class UpMultiHeadAttn(nn.Module):
-    def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
-        super().__init__()
 
-        """use mesh_file to perform transposed convolution to the next higher resolution mesh"""
-        mesh_file = os.path.join(mesh_dir, "icosphere_{}.pkl".format(level))
-        half_in = int(in_ch/2)
-        self.up = MeshConv_transpose(half_in, half_in, mesh_file, level=level, mesh_dir=mesh_dir, stride=2)
-
-        #### POSSIBLE ATTENTION BLOCK ####
-        # WARNING: SUPER DUCT TAPE ENGINEERED - FIX THIS LATER
-        dims = [2562, 10242, 32492]
-        heads = [6, 9, 4]
-        self.num_heads = heads[level]
-        self.embed_dim = dims[level]
-        self.attn = nn.MultiheadAttention(embed_dim=dims[level], num_heads=heads[level], dropout=0.2)
-        ##################################
-
-        self.conv = ResPoolBlock(in_ch, out_ch, out_ch, level, False, mesh_dir)
-
-    def forward(self, x1, x2):
-        x1 = self.up(x1)
-        x2, _ = self.attn(x1, x2, x2)
-        x = torch.cat([x2, x1], dim=1)
-        x = self.conv(x)
-        return x
-    
 class Up(nn.Module):
     def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
         super().__init__()
@@ -59,6 +33,39 @@ class Up(nn.Module):
         x = torch.cat([x2, x1], dim=1)
         x = self.conv(x)
         return x
+
+class Down(nn.Module):
+    def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
+        super().__init__()
+        """use mesh_file to perform convolution to the next coarser resolution mesh"""
+        self.conv = ResPoolBlock(in_ch, in_ch, out_ch, level+1, True, mesh_dir)
+
+    def forward(self, x):
+        x = self.conv(x)
+        return x
+
+
+class UpSE(nn.Module):
+    def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
+        super().__init__()
+
+        """use mesh_file to perform transposed convolution to the next higher resolution mesh"""
+        if in_ch // ratio < 1:
+            ratio = in_ch // 4
+            print('Ratio too small, using', ratio)
+        mesh_file = os.path.join(mesh_dir, "icosphere_{}.pkl".format(level))
+        half_in = int(in_ch/2)
+        self.up = MeshConv_transpose(half_in, half_in, mesh_file, level=level, mesh_dir=mesh_dir, stride=2)
+        self.se = SqueezeExcitation(in_ch, ratio=16)
+        self.conv = ResPoolBlock(in_ch, out_ch, out_ch, level, False, mesh_dir)
+
+    def forward(self, x1, x2):
+        x1 = self.up(x1)
+        x = torch.cat([x2, x1], dim=1)
+        x = self.se(x)
+        x = self.conv(x)
+        return x
+
 
 class SqueezeExcitation(nn.Module):
     def __init__(self, in_ch, ratio, activation=nn.Tanh, scale_activation=nn.Tanh):
@@ -87,37 +94,6 @@ class SqueezeExcitation(nn.Module):
         return scale * x
 
 
-class Down(nn.Module):
-    def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
-        super().__init__()
-        """use mesh_file to perform convolution to the next coarser resolution mesh"""
-        self.conv = ResPoolBlock(in_ch, in_ch, out_ch, level+1, True, mesh_dir)
-
-    def forward(self, x):
-        x = self.conv(x)
-        return x
-    
-class UpSE(nn.Module):
-    def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True):
-        super().__init__()
-
-        """use mesh_file to perform transposed convolution to the next higher resolution mesh"""
-        if in_ch // ratio < 1:
-            ratio = in_ch // 4
-            print('Ratio too small, using', ratio)
-        mesh_file = os.path.join(mesh_dir, "icosphere_{}.pkl".format(level))
-        half_in = int(in_ch/2)
-        self.up = MeshConv_transpose(half_in, half_in, mesh_file, level=level, mesh_dir=mesh_dir, stride=2)
-        self.se = SqueezeExcitation(in_ch, ratio=16)
-        self.conv = ResPoolBlock(in_ch, out_ch, out_ch, level, False, mesh_dir)
-
-    def forward(self, x1, x2):
-        x1 = self.up(x1)
-        x = torch.cat([x2, x1], dim=1)
-        x = self.se(x)
-        x = self.conv(x)
-        return x
-
 class DownSE(nn.Module):
     def __init__(self, in_ch, out_ch, level, mesh_dir, bias=True, ratio=16):
         super().__init__()
@@ -132,7 +108,8 @@ class DownSE(nn.Module):
         x = self.se(x)
         x = self.conv(x)
         return x
-    
+
+
 class BrainSurfCNN(nn.Module):
     def __init__(self, mesh_dir, in_ch, out_ch, max_level=5, min_level=0, fdim=64):
         super().__init__()
@@ -170,7 +147,8 @@ class BrainSurfCNN(nn.Module):
 
     def __meshfile(self, i):
         return os.path.join(self.mesh_dir, "icosphere_{}.pkl".format(i))
-    
+
+
 class BrainSErfCNN(nn.Module):
     def __init__(self, mesh_dir, in_ch, out_ch, max_level=5, min_level=0, fdim=64, init_ratio=5):
         super().__init__()
@@ -211,46 +189,7 @@ class BrainSErfCNN(nn.Module):
     def __meshfile(self, i):
         return os.path.join(self.mesh_dir, "icosphere_{}.pkl".format(i))
     
-    
-class BrainSurfAttnCNN(nn.Module):
-    def __init__(self, mesh_dir, in_ch, out_ch, max_level=5, min_level=0, fdim=64):
-        super().__init__()
-        self.mesh_dir = mesh_dir
-        self.fdim = fdim
-        self.max_level = max_level
-        self.min_level = min_level
-        self.levels = max_level - min_level
-        self.down = []
-        self.up = []
-        self.in_conv = MeshConv(in_ch, fdim, self.__meshfile(max_level), stride=1)
-        self.out_conv = MeshConv(fdim, out_ch, self.__meshfile(max_level), stride=1)
-
-        """Downward path"""
-        for i in range(self.levels-1):
-            self.down.append(Down(fdim*(2**i), fdim*(2**(i+1)), max_level-i-1, mesh_dir))
-        self.down.append(Down(fdim*(2**(self.levels-1)), fdim*(2**(self.levels-1)), min_level, mesh_dir))
-
-        """Upward path"""
-        for i in range(self.levels-1):
-            self.up.append(UpMultiHeadAttn(fdim*(2**(self.levels-i)), fdim*(2**(self.levels-i-2)), min_level+i+1, mesh_dir))
-        self.up.append(Up(fdim*2, fdim, max_level, mesh_dir))
-        self.down = nn.ModuleList(self.down)
-        self.up = nn.ModuleList(self.up)
-
-    def forward(self, x):
-        x_ = [self.in_conv(x)]
-        for i in range(self.levels):
-            x_.append(self.down[i](x_[-1]))
-        x = self.up[0](x_[-1], x_[-2])
-        for i in range(self.levels-1):
-            x = self.up[i+1](x, x_[-3-i])
-        x = self.out_conv(x)
-        return x
-
-    def __meshfile(self, i):
-        return os.path.join(self.mesh_dir, "icosphere_{}.pkl".format(i))
-
-
+   
 class _MeshConv(nn.Module):
     def __init__(self, in_channels, out_channels, mesh_file, stride=1, bias=True):
         assert stride in [1, 2]
@@ -281,6 +220,7 @@ class _MeshConv(nn.Module):
         self.coeffs.data.uniform_(-stdv, stdv)
         if self.bias is not None:
             self.bias.data.uniform_(-stdv, stdv)
+
 
 class MeshConv(_MeshConv):
     def __init__(self, in_channels, out_channels, mesh_file, stride=1, bias=True):
@@ -314,6 +254,7 @@ class MeshConv(_MeshConv):
         out = torch.sum(torch.sum(torch.mul(out.unsqueeze(1), self.coeffs.unsqueeze(2)), dim=2), dim=-1)
         out += self.bias.unsqueeze(-1)
         return out
+
 
 class MeshConv_transpose(_MeshConv):
     def __init__(self, in_channels, out_channels, mesh_file, stride=2, bias=True, level=-1, mesh_dir=None):
@@ -349,7 +290,6 @@ class MeshConv_transpose(_MeshConv):
         out += self.bias.unsqueeze(-1)
  
         return out
-
 
 
 class ResPoolBlock(nn.Module):
