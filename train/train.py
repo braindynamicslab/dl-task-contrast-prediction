@@ -10,7 +10,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torchsummary import summary
 
-from model.brain_surf_cnn import BrainSurfCNN, BrainSurfAttnCNN
+from model.brain_surf_cnn import BrainSurfCNN
 from utils import experiment
 from utils.parser import train_args
 from utils.dataset import MultipleSampleMeshDataset
