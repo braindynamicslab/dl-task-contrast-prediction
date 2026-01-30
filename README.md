@@ -9,9 +9,8 @@ This project contains the source code for several models to be used in predictin
 
 ![Model overview](model/schematic.png)
 
-Note: Much of the work in this code has been adapted from [BrainSurfCNN](https://github.com/ngohgia/brain-surf-cnn) which is adapted from [UGSCNN](https://github.com/maxjiang93/ugscnn).
 
-## Code/Folder Description
+## Code / Folder Description
 1. [data](./data) folder contains the surface mesh templates, medial-wall mask and subject IDs from the Human Connectome Project (HCP) S1200 used in our experiments.
 2. [model](./model) folder contains BrainSurfCNN, BrainSERF, and BrainSurfGCN source code.
 3. [preprocess](./preprocess) folder contains functions needed for preprocessing the surface data.
@@ -19,6 +18,9 @@ Note: Much of the work in this code has been adapted from [BrainSurfCNN](https:/
 5. [train](./train) folder contains training functions to train each stage of the model (MSE or fine-tuning) and save the model parameters.
 6. [test](./test) folder contains functions to test the trained models and save the predictions.
 7. [posthoc_analysis](.posthoc_analysis) folder contains Jupyter notebooks for computing model metrics and creating figures used in the paper. Please note: in order to recreate figures, it may require some playing around with the plotting parameters especially for the figures that are plotted on brains.
+
+Note: Much of the work in this code has been adapted from [BrainSurfCNN](https://github.com/ngohgia/brain-surf-cnn) which is adapted from [UGSCNN](https://github.com/maxjiang93/ugscnn).
+
 ----
 
 ## How to Use
