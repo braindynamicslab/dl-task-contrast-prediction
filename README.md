@@ -49,6 +49,7 @@ OUTPUTS_DIR=/where/to/store/the/model.pth
 
 python3 -u train_gnn.py \
        --gpus 0 \
+       --batch_size 2 \
        --ver gnn_mse_larger \
        --n_samples_per_subj $NUM_SAMPLES\
        --loss mse \
@@ -66,5 +67,6 @@ Note: BrainSurfGCN's `--mesh_dir` argument requires a path to the `icosphere_2.p
 
 ## Training Parameters
 Check [utils/parser.py](https://github.com/braindynamicslab/dl-task-contrast-prediction/blob/main/utils/parser.py)
+
 
 
