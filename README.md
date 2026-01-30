@@ -1,7 +1,7 @@
 # dl-task-contrast-prediction
 
 ## Referenced Work
-Soren J. Madsen*, Young-Eun Lee*, Lucina Q. Uddin, Jeannette A. Mumford, Deanna M. Barch, Damien A. Fair, Ian H. Gotlib, Russell A. Poldrack, Amy Kuceyeski, Manish Saggar. **Predicting Task Activation Maps from Resting-State Functional Connectivity using Deep Learning** [[bioarXiv]](https://www.biorxiv.org/content/10.1101/2024.09.10.612309v2)
+Soren J. Madsen*, Young-Eun Lee*, Lucina Q. Uddin, Jeannette A. Mumford, Deanna M. Barch, Damien A. Fair, Ian H. Gotlib, Russell A. Poldrack, Amy Kuceyeski, Manish Saggar. **Efficient Deep Learning Models for Predicting Individualized Task Activation from Resting-State Functional Connectivity** [[bioarXiv]](https://www.biorxiv.org/content/10.1101/2024.09.10.612309v3)
 
 ## Overview
 
